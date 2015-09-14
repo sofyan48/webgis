@@ -1,0 +1,75 @@
+.jarak {
+	padding-top: 10px;
+	padding-left:10px;
+	padding-right:10px;
+	position: relative;	
+}
+
+.jarakTombol {
+	padding-top: 40px;
+	position: relative;	
+}
+
+body{
+	background: #ECF0F1;
+}
+
+.navbar-top {
+	color: #19B5FE;
+	border: solid 1px #19B5FE;
+	background: #19B5FE;
+	/*
+	background: -webkit-gradient(linear, left top, left bottom, from(#66CC99), to(#19B5FE));
+	background: -moz-linear-gradient(top,  #19B5FE,  #19B5FE);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#19B5FE', endColorstr='#19B5FE');
+	*/
+}
+
+
+.nav-link:hover {
+	background: #ba4b58;
+	background: -webkit-gradient(linear, left top, left bottom, from(#cf5d6a), to(#a53845));
+	background: -moz-linear-gradient(top,  #cf5d6a,  #a53845);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#cf5d6a', endColorstr='#a53845');
+}
+.nav-link:active {
+	color: #dca4ab;
+	background: -webkit-gradient(linear, left top, left bottom, from(#bf404f), to(#f16c7c));
+	background: -moz-linear-gradient(top,  #bf404f,  #f16c7c);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#bf404f', endColorstr='#f16c7c');
+}
+
+.round-button {
+	width:25%;
+}
+.round-button-circle {
+	width: 100%;
+	height:0;
+	padding-bottom: 100%;
+    border-radius: 50%;
+	border:10px solid #cfdcec;
+    overflow:hidden;
+    
+    background: #4679BD; 
+    box-shadow: 0 0 3px gray;
+}
+.round-button-circle:hover {
+	background:#30588e;
+}
+.round-button a {
+    display:block;
+	float:left;
+	width:100%;
+	padding-top:50%;
+    padding-bottom:50%;
+	line-height:1em;
+	margin-top:-0.5em;
+    
+	text-align:center;
+	color:#e2eaf3;
+    font-family:Verdana;
+    font-size:1.2em;
+    font-weight:bold;
+    text-decoration:none;
+}
+
