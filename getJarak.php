@@ -15,6 +15,8 @@ $idPosisiPenumpang =  $_POST['posisiTerakhir'];
 
 //ambil data
 $idAmbil = $_GET['idAmbil'];
+$idPosisiPengguna = $_GET['idTerakhir'];
+
 
 if (isset($_GET['action']) && $_GET['action'] == 'getJarak') {
 	if ($jarak == 0){
@@ -120,13 +122,47 @@ else if (isset($_GET['action']) && $_GET['action'] == 'dataDijkstra') {
 	$datax_r = array();
 	while ($row = mysql_fetch_row($sql)) {
 		$datax['id'] = $row[0];
-		$datax['start'] = $row[1];
-		$datax['finish'] = $row[2];
-		$datax['jarak'] = $row[3];
+		$datax['pengguna'] = $row[1];
+		$datax['start'] = $row[2];
+		$datax['finish'] = $row[3];
+		$datax['jarak'] = $row[4];
 		array_push($datax_r, $datax);
 	}
 	$data = $datax_r;
 	echo json_encode($data);
 exit;
 }
+
+else if (isset($_GET['action']) && $_GET['action'] == 'posisiSaya') {
+	$query = "SELECT * FROM tb_posisi_terakhir where id_posisi='$idPosisiPengguna'";		
+	$sql = mysql_query($query) or die($query);
+	$data = $_POST;
+	$datax = array();
+	$datax_r = array();
+	while ($row = mysql_fetch_row($sql)) {
+		$datax['id'] = $row[0];
+		$datax['pengguna'] = $row[1];
+		$datax['posisi'] = $row[2];
+		array_push($datax_r, $datax);
+	}
+	$data = $datax_r;
+	echo json_encode($data);
+exit;
+}
+/*
+else if (isset($_GET['action']) && $_GET['action'] == 'posisiMobil') {
+	$query = "";		
+	$sql = mysql_query($query) or die($query);
+	$data = $_POST;
+	$datax = array();
+	$datax_r = array();
+	while ($row = mysql_fetch_row($sql)) {
+		$datax[''] = $row[];
+		array_push($datax_r, $datax);
+	}
+	$data = $datax_r;
+	echo json_encode($data);
+exit;
+}
+*/
 ?>

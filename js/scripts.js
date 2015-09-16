@@ -19,16 +19,19 @@ $(document).ready(function(){
     //
 	$("#cariMobil").click(function(){
 		var dataJalan = ambilAjax("getJarak.php?action=dataDijkstra&idAmbil="+document.getElementById("idPengguna").value,'get',false);
-		console.log(dataJalan);
-		/*
-		var a= parseInt(arr[0]),
-			b= parseInt(arr[1]),
-			c= parseInt(arr[2]),
-			d= parseInt(arr[3]);
-		makeRoads("A", "B", a, "C", b);
-		makeRoads("B", "C", c, "D",d);
-		var a = Dijkstra(roads, "B", "C");
-		*/	
+		var dataPosisiPengguna = ambilAjax("getJarak.php?action=posisiSaya&idTerakhir="+document.getElementById("idPengguna").value,'get',false);
+		
+		var obj = jQuery.parseJSON(dataJalan);
+		var objPengguna = jQuery.parseJSON(dataPosisiPengguna);
+
+		var a= parseInt(obj[0].jarak),
+			b= parseInt(obj[1].jarak),
+			c= parseInt(obj[2].jarak),
+			d= parseInt(obj[3].jarak);
+		makeRoads(obj[0].start, obj[0].finish, a,obj[1].finish,b,obj[2].finish,c,obj[4].finish,d);
+		makeRoads(obj[1].start, obj[1].finish, b);
+		var a = Dijkstra(roads, objPengguna[0].posisi, obj[0].finish);
+		
 	});	
 		
 });
@@ -319,7 +322,7 @@ function Dijkstra(roads, source, dest) {
       }
     }
     thePath = place + '->' + thePath;
-    //console.log("Distance from " + source + "-->" + dest + " : "+distance[i] + ' (' + thePath + ')');
+    console.log("Distance from " + source + "-->" + dest + " : "+distance[i]);
     return distance[i];
   } else {
     console.log("no path");
