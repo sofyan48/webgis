@@ -19,6 +19,7 @@ $(document).ready(function(){
     //
 	$("#cariMobil").click(function(){
 		var dataJalan = ambilAjax("getJarak.php?action=dataDijkstra",'get',false);
+		var dataPenumpang = [];
 		var objJalan = JSON.parse(dataJalan);
 		for (var i = 0; i < objJalan.length; i++) {
 			
@@ -91,7 +92,7 @@ function initMap() {
       var geocoderMobil = new google.maps.Geocoder;
       tambahMarker(mobilDB,map);
 	  buatJalan(objTempat,objTujuan);
-	  posisiSaya(geocoderSaya,pos);
+	  posisiSaya(pos);
 	  tampilPosisiMobil(geocoderMobil,mobilDB);
 	  
     },function() {
@@ -161,6 +162,7 @@ function buatJalan(tempat,mobil){
 				var results = response.rows[i].elements;
 				for (var j = 0; j < results.length; j++) {
 					jarak.push({
+						pengguna:document.getElementById("idPengguna").value,
 						asal:originList[i],
 						tujuan: destinationList[j],
 						jarak:results[j].distance.value
@@ -172,8 +174,9 @@ function buatJalan(tempat,mobil){
 				if (jarak[d].tujuan == jarak[d].asal){
 					jarak.splice(d,1);
 				}
-				//kirimData("getJarak.php?action=getJarak",jarak[d]);	
+				//kirimData("getJarak.php?action=getJarak",jarak[d]);
 			}
+			
 			$.each(jarak,function(data){
 				var x = document.getElementById("jalurLokasi");
 				var option = document.createElement("option");
@@ -191,24 +194,36 @@ function buatJalan(tempat,mobil){
 	});
 }
 
-function posisiSaya(geocoder,pos) {
-  var latlng = pos;
-  var posisi = []
-  geocoder.geocode({'location': latlng}, function(results, status) {
-    if (status === google.maps.GeocoderStatus.OK) {
-      if (results[1]) {
-        posisi.push({
+function posisiSaya(pos) {
+  var service = new google.maps.DistanceMatrixService;
+	var latlng=[pos];
+	service.getDistanceMatrix({
+			origins: latlng,
+			destinations: latlng,
+			travelMode: google.maps.TravelMode.DRIVING,
+			unitSystem: google.maps.UnitSystem.METRIC,
+			avoidHighways: false,
+			avoidTolls: false
+		},
+		
+		function(response, status){
+			var originList = response.originAddresses;
+			var alamat =[];
+			var alamatPenumpang=[];
+			if (status !== google.maps.DistanceMatrixStatus.OK) {
+				alert('Error was: ' + status);
+			} 
+			else {
+				for (var i = 0; i < originList.length; i++) {
+					var results = response.rows[i].elements;	
+					alamat.push({
 						penumpang: document.getElementById("idPengguna").value,
-						posisiTerakhir:results[1].formatted_address
-					});
-      } else {
-        window.alert('No results found');
-      }
-    } else {
-      window.alert('Geocoder failed due to: ' + status);
-    }
-    kirimData("getJarak.php?action=getPosisiPenumpang",posisi[0]);
-  });
+						posisiTerakhir:originList[i]
+					});	
+					kirimData("getJarak.php?action=getPosisiPenumpang",alamat[i]);
+				}
+			}
+		});
 }
 
 

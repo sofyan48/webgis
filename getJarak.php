@@ -12,23 +12,30 @@ $idPenumpang = $_POST['penumpang'];
 $idPosisiPenumpang =  $_POST['posisiTerakhir'];
 
 if (isset($_GET['action']) && $_GET['action'] == 'getJarak') {
-
-	$query=sprintf("INSERT INTO tb_jalan VALUES (NULL,'%s','%s','%s')",
+	if ($jarak==0){
+		echo "Maaf Data Null";
+	}
+	else{
+		$query=sprintf("INSERT INTO tb_jalan VALUES (NULL,'%s','%s','%s')",
 					mysql_escape_string($asal),
 					mysql_escape_string($tujuan),
 					mysql_escape_string($jarak)
-	);
+		);
+		
+		//$query = "UPDATE tb_jalan SET jarak='$jarak',start='$asal',finish='$tujuan' WHERE pengguna='$iduser'";
+		$pesan = "";
+		if($sql=mysql_query($query)){
+			$pesan="Berhasil Disimpan";
+			echo $pesan;
+		}
+		else{
+			$pesan="Gagal Disimpan";
+			echo $pesan .= mysql_error();
+		}
+	}
+	/*
 	
-	//$query = "UPDATE tb_jalan SET jarak='$jarak',start='$asal',finish='$tujuan' WHERE pengguna='$iduser'";
-	$pesan = "";
-	if($sql=mysql_query($query)){
-		$pesan="Berhasil Disimpan";
-		echo $pesan;
-	}
-	else{
-		$pesan="Gagal Disimpan";
-		echo $pesan .= mysql_error();
-	}
+	*/
 exit;
 }
 
@@ -49,6 +56,7 @@ else if (isset($_GET['action']) && $_GET['action'] == 'getPosisiTerakhir') {
 		$pesan="Gagal Disimpan";
 		echo $pesan .= mysql_error();
 	}
+	
 exit;
 }
 
@@ -56,9 +64,9 @@ else if (isset($_GET['action']) && $_GET['action'] == 'getPosisiPenumpang') {
 	$cekQuery = "SELECT * FROM tb_penumpang where id_pengguna='$idPenumpang'";
 	$sqlCek = mysql_query($cekQuery);
 	if (mysql_num_rows($sqlCek) > 0) {		
-		$query = "UPDATE tb_penumpang SET posisi_terakhir='$idPosisiPenumpang' WHERE id_pengguna='$idPenumpang'";
+		echo $queryUpdate = "UPDATE tb_penumpang SET posisi_terakhir='$idPosisiPenumpang' WHERE id_pengguna='$idPenumpang'";
 		$pesan = "";
-		if($sql=mysql_query($query)){
+		if($sql=mysql_query($queryUpdate)){
 			$pesan="Berhasil Di Update";
 			echo $pesan;
 		}
