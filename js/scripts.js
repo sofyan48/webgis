@@ -28,15 +28,19 @@ function cariJalur(){
 		
 		var obj = jQuery.parseJSON(dataJalan);
 		var objPengguna = jQuery.parseJSON(dataPosisiPengguna);
-
-		var a= parseInt(obj[0].jarak),
-			b= parseInt(obj[1].jarak),
-			c= parseInt(obj[2].jarak),
-			d= parseInt(obj[3].jarak);
-		makeRoads(obj[0].start, obj[0].finish, a,obj[1].finish,b,obj[2].finish,c,obj[4].finish,d);
+		console.log(objPengguna);
+		var a= parseInt(obj[16].jarak),
+			b= parseInt(obj[17].jarak),
+			c= parseInt(obj[18].jarak),
+			d= parseInt(obj[19].jarak);
+		makeRoads(obj[16].start, obj[16].finish, a,obj[17].finish,b,obj[18].finish,c,obj[19].finish,d);
 		makeRoads(obj[1].start, obj[1].finish, b);
-		var a = Dijkstra(roads, objPengguna[0].posisi, obj[0].finish);
-		return a;
+		var sa = Dijkstra(roads, objPengguna[0].posisi, obj[16].finish);
+		var sb = Dijkstra(roads, objPengguna[0].posisi, obj[17].finish);
+		var sc = Dijkstra(roads, objPengguna[0].posisi, obj[18].finish);
+		var sd = Dijkstra(roads, objPengguna[0].posisi, obj[18].finish);
+		
+		return sb;
 }
 
 function ambilAjax(url,type,async)
@@ -98,6 +102,7 @@ function initMap() {
 	  	 
 	  var onClick = function() {
 		 var a = cariJalur();
+		 console.log(a);
 		 tampilJalan(directionsService,directionsDisplay,a[1],a[2]);
 	  };
 	  document.getElementById('cariMobil').addEventListener('click', onClick);

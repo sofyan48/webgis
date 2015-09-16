@@ -134,7 +134,7 @@ exit;
 }
 
 else if (isset($_GET['action']) && $_GET['action'] == 'posisiSaya') {
-	$query = "SELECT * FROM tb_posisi_terakhir where id_posisi='$idPosisiPengguna'";		
+	$query = "SELECT * FROM tb_penumpang where id_pengguna='$idPosisiPengguna'";		
 	$sql = mysql_query($query) or die($query);
 	$data = $_POST;
 	$datax = array();
