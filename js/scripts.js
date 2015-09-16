@@ -18,20 +18,17 @@ $(document).ready(function(){
 	}); 
     //
 	$("#cariMobil").click(function(){
-		var dataJalan = ambilAjax("getJarak.php?action=dataDijkstra",'get',false);
-		var dataPenumpang = [];
-		var objJalan = JSON.parse(dataJalan);
-		for (var i = 0; i < objJalan.length; i++) {
-			
-		}
-		var arr = objJalan;
+		var dataJalan = ambilAjax("getJarak.php?action=dataDijkstra&idAmbil="+document.getElementById("idPengguna").value,'get',false);
+		console.log(dataJalan);
+		/*
 		var a= parseInt(arr[0]),
 			b= parseInt(arr[1]),
 			c= parseInt(arr[2]),
 			d= parseInt(arr[3]);
 		makeRoads("A", "B", a, "C", b);
 		makeRoads("B", "C", c, "D",d);
-		var a = Dijkstra(roads, "B", "C");		
+		var a = Dijkstra(roads, "B", "C");
+		*/	
 	});	
 		
 });
@@ -162,6 +159,7 @@ function buatJalan(tempat,mobil){
 				var results = response.rows[i].elements;
 				for (var j = 0; j < results.length; j++) {
 					jarak.push({
+						id:document.getElementById("idPengguna").value+i+j,
 						pengguna:document.getElementById("idPengguna").value,
 						asal:originList[i],
 						tujuan: destinationList[j],
@@ -169,14 +167,12 @@ function buatJalan(tempat,mobil){
 					});	
 				}
 			}
-			
 			for (var d = 0; d < jarak.length; d++) {
 				if (jarak[d].tujuan == jarak[d].asal){
 					jarak.splice(d,1);
 				}
-				//kirimData("getJarak.php?action=getJarak",jarak[d]);
+				kirimData("getJarak.php?action=getJarak",jarak[d]);
 			}
-			
 			$.each(jarak,function(data){
 				var x = document.getElementById("jalurLokasi");
 				var option = document.createElement("option");
