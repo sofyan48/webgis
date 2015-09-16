@@ -10,7 +10,10 @@ $jarak = $_POST['jarak'];
 $mobil = $_POST['mobil'];
 $posisi = $_POST['jalan'];
 
+//posisi penumpang
 $idPenumpang = $_POST['penumpang'];
+$lat= $_POST['latitude'];
+$lng = $_POST['longitude'];
 $idPosisiPenumpang =  $_POST['posisiTerakhir'];
 
 //ambil data
@@ -30,7 +33,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getJarak') {
 			$pesan = "";
 			if($sql=mysql_query($query)){
 				$pesan="Berhasil Diupdate";
-				echo $pesan;
+				echo $pesan."  ".$id;
 			}
 			else{
 				$pesan="Gagal Disimpan";
@@ -48,7 +51,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'getJarak') {
 			$pesan = "";
 			if($sql=mysql_query($query)){
 				$pesan="Berhasil Disimpan";
-				echo $pesan;
+				echo $pesan."  ".$id;
 			}
 			else{
 				$pesan="Gagal Disimpan";
@@ -84,7 +87,7 @@ else if (isset($_GET['action']) && $_GET['action'] == 'getPosisiPenumpang') {
 	$cekQuery = "SELECT * FROM tb_penumpang where id_pengguna='$idPenumpang'";
 	$sqlCek = mysql_query($cekQuery);
 	if (mysql_num_rows($sqlCek) > 0) {		
-		$queryUpdate = "UPDATE tb_penumpang SET posisi_terakhir='$idPosisiPenumpang' WHERE id_pengguna='$idPenumpang'";
+		$queryUpdate = "UPDATE tb_penumpang SET posisi_terakhir='$idPosisiPenumpang',latitude='$lat',longitude='$lng' WHERE id_pengguna='$idPenumpang'";
 		$pesan = "";
 		if($sql=mysql_query($queryUpdate)){
 			$pesan="Berhasil Di Update";
@@ -96,9 +99,11 @@ else if (isset($_GET['action']) && $_GET['action'] == 'getPosisiPenumpang') {
 		}
 	} 
 	else {
-		$query=sprintf("INSERT INTO tb_penumpang VALUES (NULL,'%s','%s')",
+		$query=sprintf("INSERT INTO tb_penumpang VALUES (NULL,'%s','%s','%s','%s')",
 				mysql_escape_string($idPenumpang),
-				mysql_escape_string($idPosisiPenumpang)
+				mysql_escape_string($idPosisiPenumpang),
+				mysql_escape_string($lat),
+				mysql_escape_string($lng)
 		);
 		$pesan = "";
 		if($sql=mysql_query($query)){
@@ -143,6 +148,8 @@ else if (isset($_GET['action']) && $_GET['action'] == 'posisiSaya') {
 		$datax['id'] = $row[0];
 		$datax['pengguna'] = $row[1];
 		$datax['posisi'] = $row[2];
+		$datax['lat'] = $row[3];
+		$datax['lng'] = $row[4];
 		array_push($datax_r, $datax);
 	}
 	$data = $datax_r;

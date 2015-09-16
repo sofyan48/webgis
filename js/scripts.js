@@ -22,25 +22,84 @@ google.maps.event.addDomListener(window, 'load', initMap);
 
 var mobilDB = JSON.parse(data);
 
+function opmin(a,b,c,d,e){
+    var min;
+    if(a >= b && b <= c && b <= d && b <= e ){
+         min = b;
+    }
+    else if(c <= b && c <= a && c <= d && c <= e ) {
+        min= c;
+    }
+    else if(d <= b && d <= a && d <= c && d <= e){
+		min=d;
+	}
+	else if (e <= b && e <= a && e <= c && e <= d){
+		min=e;
+	}
+    else {
+        min = a;
+    }
+    return min;
+}
+
 function cariJalur(){
 	var dataJalan = ambilAjax("getJarak.php?action=dataDijkstra&idAmbil="+document.getElementById("idPengguna").value,'get',false);
 		var dataPosisiPengguna = ambilAjax("getJarak.php?action=posisiSaya&idTerakhir="+document.getElementById("idPengguna").value,'get',false);
 		
 		var obj = jQuery.parseJSON(dataJalan);
 		var objPengguna = jQuery.parseJSON(dataPosisiPengguna);
-		console.log(objPengguna);
-		var a= parseInt(obj[16].jarak),
-			b= parseInt(obj[17].jarak),
-			c= parseInt(obj[18].jarak),
-			d= parseInt(obj[19].jarak);
-		makeRoads(obj[16].start, obj[16].finish, a,obj[17].finish,b,obj[18].finish,c,obj[19].finish,d);
-		makeRoads(obj[1].start, obj[1].finish, b);
+		console.log(obj);
+		for (var q=0; q<=obj.length;q++){
+			if (q<=5){
+				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+			}
+			else if(q<=11){
+				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+				
+			}
+			else if(q<18){
+				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+			}
+			else if(q<24){
+				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+			}
+			else if(q<30){
+				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+			}
+			else if(q<36){
+				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+			}
+			else if(q<42){
+				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+			}
+			
+		}
+		var sa = Dijkstra(roads, objPengguna[0].posisi, obj[2].finish);
+		return sa;
+		/*
+		var a= obj[35].jarak,
+			b= obj[36].jarak,
+			c= obj[37].jarak,
+			d= obj[38].jarak,
+			e= obj[39].jarak,
+			f= obj[40].jarak,
+			g= obj[41].jarak;
+		makeRoads(
+					obj[35].start, 
+					obj[35].finish,a,
+					obj[36].finish,b,
+					obj[37].finish,c,
+					obj[38].finish,d,
+					obj[39].finish,e,
+					obj[40].finish,f,
+					obj[41].finish,g
+				);
 		var sa = Dijkstra(roads, objPengguna[0].posisi, obj[16].finish);
-		var sb = Dijkstra(roads, objPengguna[0].posisi, obj[17].finish);
-		var sc = Dijkstra(roads, objPengguna[0].posisi, obj[18].finish);
-		var sd = Dijkstra(roads, objPengguna[0].posisi, obj[18].finish);
-		
-		return sb;
+		//var sb = Dijkstra(roads, objPengguna[0].posisi, obj[17].finish);
+		//var sc = Dijkstra(roads, objPengguna[0].posisi, obj[18].finish);
+		//var sd = Dijkstra(roads, objPengguna[0].posisi, obj[18].finish);
+		return sa;
+		*/
 }
 
 function ambilAjax(url,type,async)
@@ -63,7 +122,7 @@ function kirimData(url,d){
 		type: 'POST',
 		data:d,
 		success: function(status) {
-			console.log(status);
+			//console.log(status);
 		} 
 	});
 }
@@ -89,6 +148,8 @@ function initMap() {
       map.setCenter(pos);
       map.setZoom(14);
       directionsDisplay.setMap(map);
+      directionsDisplay.setPanel(document.getElementById('panelJalan'));
+      
       var objTempat=titikJalan(mobilDB);
       objTempat.push(pos);
       var objTujuan=titikJalan(mobilDB);
@@ -103,7 +164,12 @@ function initMap() {
 	  var onClick = function() {
 		 var a = cariJalur();
 		 console.log(a);
-		 tampilJalan(directionsService,directionsDisplay,a[1],a[2]);
+		 if (a==false){
+			 alert("Tidak Ada Jalan");
+		 }
+		 else{
+			tampilJalan(directionsService,directionsDisplay,a[1],a[2]);
+		 }
 	  };
 	  document.getElementById('cariMobil').addEventListener('click', onClick);
 	  
@@ -229,6 +295,8 @@ function posisiSaya(pos) {
 				var results = response.rows[i].elements;	
 				alamat.push({
 					penumpang: document.getElementById("idPengguna").value,
+					latitude:latlng[i].lat,
+					longitude:latlng[i].lng,
 					posisiTerakhir:originList[i]
 				});	
 				kirimData("getJarak.php?action=getPosisiPenumpang",alamat[i]);
@@ -286,8 +354,10 @@ function tampilJalan(directionsService,directionsDisplay,posisi,tujuan) {
     destination: tujuan,
     travelMode: google.maps.TravelMode.DRIVING
   }, function(response, status) {
+	var legs = directionsService.durationInTraffic;
     if (status === google.maps.DirectionsStatus.OK) {
-      directionsDisplay.setDirections(response);
+		directionsDisplay.setDirections(response);
+		 $("#modalPenunjuk").modal('show');
     } else {
       window.alert('Directions request failed due to ' + status);
     }
@@ -348,10 +418,9 @@ function Dijkstra(roads, source, dest) {
       }
     }
     thePath = place + '->' + thePath;
-    //console.log("Distance from " + source + "-->" + dest + " : "+distance[i]);
     return [distance[i],source,dest];
   } else {
-    console.log("no path");
+    return false;
   }
 }
 
