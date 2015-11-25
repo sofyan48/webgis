@@ -1,4 +1,7 @@
 $(document).ready(function(){
+	var appName =navigator.appVersion;
+	var cekAppName = appName.split(" ");
+	
 	setInterval(function(){ 
 		window.location.reload();
 	}, 500000);
@@ -15,91 +18,182 @@ $(document).ready(function(){
 		{
 		  alert(errorThrown);
 		}
+	});
+	if (cekAppName[2] == 'Android' || cekAppName[2] == 'android' || cekAppName[2] == 'Iphone' || cekAppName[2] == 'iphone'){
+		$("#panelJalan").hide();
+		$("#tabs-662392").hide();
+		$("#lprAdmin").hide();
+	}
+	else{
+		$("#panelJalan").show();
+	}
+	
+	$("#suNav").click(function(){
+		 $("#settingMaps").modal('show');
+	});	
+		
+	$("#smNav").click(function(){
+		 $("#settingUmum").modal('show');
+	});	
+		
+	$("#").click(function(){
+	});
+			
+	$("#").click(function(){
 	});		
 });
+
+function tampilSettingsUmum(){
+	
+}
 var  data = ambilAjax("latlong.php?action=latlong",'get',false);
 google.maps.event.addDomListener(window, 'load', initMap);
 
 var mobilDB = JSON.parse(data);
 
-function opmin(a,b,c,d,e){
-    var min;
-    if(a >= b && b <= c && b <= d && b <= e ){
-         min = b;
-    }
-    else if(c <= b && c <= a && c <= d && c <= e ) {
-        min= c;
-    }
-    else if(d <= b && d <= a && d <= c && d <= e){
-		min=d;
-	}
-	else if (e <= b && e <= a && e <= c && e <= d){
-		min=e;
-	}
-    else {
-        min = a;
-    }
-    return min;
-}
-
 function cariJalur(){
 	var dataJalan = ambilAjax("getJarak.php?action=dataDijkstra&idAmbil="+document.getElementById("idPengguna").value,'get',false);
-		var dataPosisiPengguna = ambilAjax("getJarak.php?action=posisiSaya&idTerakhir="+document.getElementById("idPengguna").value,'get',false);
+	var dataPosisiPengguna = ambilAjax("getJarak.php?action=posisiSaya&idTerakhir="+document.getElementById("idPengguna").value,'get',false);
+	var obj = jQuery.parseJSON(dataJalan);
+	var objPengguna = jQuery.parseJSON(dataPosisiPengguna);
+	for (var q=0; q<=obj.length;q++){
+		if (q<6){
+			makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+		}
+		else if(q<12){
+			makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+		}
+		else if(q<19){
+			makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+		}
+		else if(q<25){
+			makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+		}
+		else if(q<31){
+			makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+		}
+		else if(q<37){
+			makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+		}
+		else if(q<42){
+			makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+		}
 		
-		var obj = jQuery.parseJSON(dataJalan);
-		var objPengguna = jQuery.parseJSON(dataPosisiPengguna);
-		console.log(obj);
-		for (var q=0; q<=obj.length;q++){
-			if (q<=5){
-				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
-			}
-			else if(q<=11){
-				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
-				
-			}
-			else if(q<18){
-				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
-			}
-			else if(q<24){
-				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
-			}
-			else if(q<30){
-				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
-			}
-			else if(q<36){
-				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
-			}
-			else if(q<42){
-				makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
+	}
+	var jarMin=[];
+	var hitung=[];
+	var jarMin1;
+	for (var aw=0; aw<obj.length;aw++){
+		if (aw>=0 && aw<6){
+			jarMin1=Dijkstra(roads, objPengguna[0].posisi, obj[aw].finish);
+			if(jarMin1[0] != 0){ 
+				if(jarMin[0] == null){
+					jarMin[0] = jarMin1;
+				}
+				else{
+					if(jarMin[0][0] > jarMin1[0] && jarMin[0] != 0){
+						jarMin[0] = jarMin1;
+					}
+				}
 			}
 			
 		}
-		var sa = Dijkstra(roads, objPengguna[0].posisi, obj[2].finish);
-		return sa;
-		/*
-		var a= obj[35].jarak,
-			b= obj[36].jarak,
-			c= obj[37].jarak,
-			d= obj[38].jarak,
-			e= obj[39].jarak,
-			f= obj[40].jarak,
-			g= obj[41].jarak;
-		makeRoads(
-					obj[35].start, 
-					obj[35].finish,a,
-					obj[36].finish,b,
-					obj[37].finish,c,
-					obj[38].finish,d,
-					obj[39].finish,e,
-					obj[40].finish,f,
-					obj[41].finish,g
-				);
-		var sa = Dijkstra(roads, objPengguna[0].posisi, obj[16].finish);
-		//var sb = Dijkstra(roads, objPengguna[0].posisi, obj[17].finish);
-		//var sc = Dijkstra(roads, objPengguna[0].posisi, obj[18].finish);
-		//var sd = Dijkstra(roads, objPengguna[0].posisi, obj[18].finish);
-		return sa;
-		*/
+		else if(aw>=6 && aw<12){
+			jarMin1=Dijkstra(roads, objPengguna[0].posisi, obj[aw].finish);
+			if(jarMin1[0] != 0){ 
+				if(jarMin[1] == null){
+					jarMin[1] = jarMin1;
+				}
+				else{
+					if(jarMin[1][0] > jarMin1[0] && jarMin[1] != 0){
+						jarMin[1] = jarMin1;
+					}
+				}
+			}
+		}
+		else if(aw>=12 && aw<19){
+			jarMin1=Dijkstra(roads, objPengguna[0].posisi, obj[aw].finish);
+			if(jarMin1[0] != 0){ 
+				if(jarMin[2] == null){
+					jarMin[2] = jarMin1;
+				}
+				else{
+					if(jarMin[2][0] > jarMin1[0] && jarMin[2] != 0){
+						jarMin[2] = jarMin1;
+					}
+				}
+			}
+			
+		}
+		else if(aw>=19 && aw<25){
+			jarMin1=Dijkstra(roads, objPengguna[0].posisi, obj[aw].finish);
+			if(jarMin1[0] != 0){ 
+				if(jarMin[3] == null){
+					jarMin[3] = jarMin1;
+				}
+				else{
+					if(jarMin[3][0] > jarMin1[0] && jarMin[3] != 0){
+						jarMin[3] = jarMin1;
+					}
+				}
+			}
+		}
+		else if(aw>=25 && aw<31){
+			jarMin1=Dijkstra(roads, objPengguna[0].posisi, obj[aw].finish);
+			if(jarMin1[0] != 0){ 
+				if(jarMin[4] == null){
+					jarMin[4] = jarMin1;
+				}
+				else{
+					if(jarMin[4][0] > jarMin1[0] && jarMin[4] != 0){
+						jarMin[4] = jarMin1;
+					}
+				}
+			}
+		}
+		else if(aw>=31 && aw<37){
+			jarMin1=Dijkstra(roads, objPengguna[0].posisi, obj[aw].finish);
+			if(jarMin1[0] != 0){ 
+				if(jarMin[5] == null){
+					jarMin[5] = jarMin1;
+				}
+				else{
+					if(jarMin[5][0] > jarMin1[0] && jarMin[5] != 0){
+						jarMin[5] = jarMin1;
+					}
+				}
+			}
+		}
+		else if(aw>=37 && aw<42){
+			jarMin1=Dijkstra(roads, objPengguna[0].posisi, obj[aw].finish);
+			if(jarMin1[0] != 0){ 
+				if(jarMin[6] == null){
+					jarMin[6] = jarMin1;
+				}
+				else{
+					if(jarMin[6][0] > jarMin1[0] && jarMin[6] != 0){
+						jarMin[6] = jarMin1;
+					}
+				}
+			}
+		}
+	}
+	//console.log(hitung);
+	//console.log(jarMin)
+	//var sa = Dijkstra(roads, objPengguna[0].posisi, obj[10].finish);
+	var palingKecil;
+	for (var ab =0; ab<jarMin.length;ab++){
+		if(ab == 0){
+			palingKecil = jarMin[ab];
+		}
+		else{
+			if(palingKecil[0] > jarMin[ab][0]){
+				palingKecil = jarMin[ab];
+			}
+		}
+	}
+	console.log(palingKecil);
+	return palingKecil;	
 }
 
 function ambilAjax(url,type,async)
