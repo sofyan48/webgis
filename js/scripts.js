@@ -75,7 +75,7 @@ function cariJalur(){
 		else if(q<37){
 			makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
 		}
-		else if(q<42){
+		else if(q<40){
 			makeRoads(obj[q].start,obj[q].finish,parseInt(obj[q].jarak));
 		}
 		
@@ -257,6 +257,7 @@ function initMap() {
 	  	 
 	  var onClick = function() {
 		 var a = cariJalur();
+		 cariIdOto(a);
 		 console.log(a);
 		 if (a==false){
 			 alert("Tidak Ada Jalan");
@@ -543,4 +544,31 @@ function roadsFrom(place) {
   } else {
     return found;
   }
+}
+
+function cariIdOto(dataJalan){
+	$.get("isiOrder.php?action=cariIdMobil&alamat="+dataJalan[2], function(data){
+        var obj = JSON.parse(data);
+        for (var a=0; a<obj.length;a++){
+			kirimPesan(obj[a].id,"1 Order Diterima");
+		}
+    });
+}
+
+function kirimPesan(idMobil,isiPesan){
+	$("#btnPesanMobil").click(function(){
+		simpanOrder(idPengguna,idMobil);
+		$.get("isiOrder.php?action=kirimPesan&pesan="+isiPesan+"&idMobil="+idMobil, function(data){
+			console.log("Data: " + data + "\nStatus: " + status);
+			setInterval(function(){ 
+				window.location.reload();
+			},80000);
+		});
+	});	
+}
+
+function simpanOrder(idPengguna,idMobil){
+	$.get("isiOrder.php?action=simpanOrder&pengguna="+idPengguna+"&mobil="+idMobil, function(data){
+		$("#pesananDialog").modal('show');
+	});
 }

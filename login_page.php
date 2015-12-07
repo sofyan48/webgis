@@ -5,8 +5,6 @@
 <meta charset="utf-8">
 <head>
 	<link href="css/bootstrap.min.css" rel="stylesheet">
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>	
 </head>
 <body>
 <div id="semua" class="container-fluid">
@@ -57,6 +55,8 @@
 		</div>	
 	</div>
 </div>
-<script src="js/login.js"></script>	
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>	
+	<script src="js/login.js"></script>	
 </body>
 </html>
